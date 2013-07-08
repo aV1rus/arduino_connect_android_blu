@@ -1,5 +1,9 @@
 package av1rus.arduinoconnect;
-
+/*
+ * Created by Nick Maiello (aV1rus)
+ * January 2, 2013
+ * 
+ */
 import static av1rus.arduinoconnect.utils.Uses.Emergency1;
 import static av1rus.arduinoconnect.utils.Uses.Emergency2;
 import static av1rus.arduinoconnect.utils.Uses.Emergency3;

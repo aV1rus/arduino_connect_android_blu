@@ -1,5 +1,9 @@
 package av1rus.arduinoconnect.utils;
-
+/*
+ * Created by Nick Maiello (aV1rus)
+ * January 2, 2013
+ * 
+ */
 public class Uses {
 
 	public static final String HEADS_RED = "A";

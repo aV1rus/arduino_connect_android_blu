@@ -1,6 +1,10 @@
 package av1rus.arduinoconnect.MainFragments;
 
-
+/*
+ * Created by Nick Maiello (aV1rus)
+ * January 2, 2013
+ * 
+ */
 import av1rus.arduinoconnect.R;
 import android.os.Bundle;  
 import android.support.v4.app.Fragment;  

@@ -1,5 +1,9 @@
 package av1rus.arduinoconnect.background;
-
+/*
+ * Created by Nick Maiello (aV1rus)
+ * January 2, 2013
+ * 
+ */
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

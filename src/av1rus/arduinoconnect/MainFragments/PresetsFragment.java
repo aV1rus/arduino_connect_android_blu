@@ -1,6 +1,10 @@
 package av1rus.arduinoconnect.MainFragments;
 
-
+/*
+ * Created by Nick Maiello (aV1rus)
+ * January 2, 2013
+ * 
+ */
 import java.util.ArrayList;
 import java.util.Locale;
 
