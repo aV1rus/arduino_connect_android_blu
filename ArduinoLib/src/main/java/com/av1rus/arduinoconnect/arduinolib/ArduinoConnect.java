@@ -89,7 +89,6 @@ public class ArduinoConnect implements IArduinoConnect{
     }
 
     private void processReceivedMessage(String message){
-android 
     }
 
     //LISTENER
