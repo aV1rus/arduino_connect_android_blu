@@ -1,3 +1,7 @@
+*** WARNING ***
+*** This code is very old and horribly organized... Highly recommended to only view for reference... New version will be uploaded soon ***
+
+
 Welcome to Arduino Connect.
 
 This project should be imported using Maven.
