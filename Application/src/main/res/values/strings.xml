@@ -5,4 +5,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <!-- DRAWER -->
+    <string name="open">open</string>
+    <string name="closed">closed</string>
+    <string name="menu_settings">settings</string>
+
 </resources>

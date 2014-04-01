@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Colors -->
+    <color name="text_color">#FFFFFF</color>
+    <color name="edittext_color">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey">#666</color>
+    <color name="light_grey">#999</color>
+    <color name="error">#FF0000</color>
+    <color name="textHintGrey">#888</color>
+    <color name="btn_green">#00BD00</color>
+    <color name="delete_red">#FF0000</color>
+    <color name="disabled_foreground">#60ffffff</color>
+    <color name="disabled_background">#888888</color>
+
+    <!-- App -->
+    <color name="primary_color">#34A326</color>
+    <color name="background_color">@color/black</color>
+    <color name="actionbar_color">@color/black</color>
+
+    <!-- Slide Menu -->
+    <color name="slidemenu_background_color">@color/black</color>
+    <color name="slidemenu_foreground_color">@color/white</color>
+    <color name="slidemenu_disabled_foreground_color">@color/disabled_foreground</color>
+
+    <!-- View Title -->
+    <color name="view_title_foreground_color">@color/white</color>
+    <color name="view_title_background_color">#333</color>
+
+    <!-- ListView -->
+    <color name="list_background_color">@color/transparent</color>
+    <color name="list_header_foreground_color">@color/white</color>
+    <color name="list_header_background_color">@color/grey</color>
+    <color name="list_row_foreground_color">@color/white</color>
+    <color name="list_row_selector_foreground_color">@color/white</color>
+    <color name="list_row_selector_background_color">@color/primary_color</color>
+    <color name="list_row_disabled_foreground_color">@color/disabled_foreground</color>
+    <color name="list_row_disabled_background_color">@color/disabled_background</color>
+
+</resources>
