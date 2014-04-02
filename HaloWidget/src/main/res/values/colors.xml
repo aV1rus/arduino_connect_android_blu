@@ -1,0 +1,10 @@
+<resources>
+    <color name="transparent">#00000000</color>
+
+    <color name="halo_red">#F00</color>
+    <color name="halo_white">#FDCCCCFF</color>
+    <color name="halo_both">#F0F</color>
+
+    <color name="halo_title">#FF00FF00</color>
+
+</resources>

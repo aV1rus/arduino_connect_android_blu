@@ -77,6 +77,10 @@ public class SlidingMenuActivity extends FragmentActivity {
 
         }
 
+        if(item.getItemId() == R.id.action_voice_command){
+
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

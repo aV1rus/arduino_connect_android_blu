@@ -1,1 +1,1 @@
-include ':Application', ':ArduinoLib'
+include ':Application', ':ArduinoLib', ':HaloWidget'

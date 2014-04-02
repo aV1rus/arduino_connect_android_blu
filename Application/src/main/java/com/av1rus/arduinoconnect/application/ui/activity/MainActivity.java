@@ -4,17 +4,19 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.av1rus.arduinoconnect.application.R;
 import com.av1rus.arduinoconnect.application.app.ArduinoConnectApp;
-import com.av1rus.arduinoconnect.application.model.FragmentPager;
 import com.av1rus.arduinoconnect.application.ui.fragment.LogFragment;
 import com.av1rus.arduinoconnect.application.ui.fragment.PairedDevicesFragment;
 import com.av1rus.arduinoconnect.arduinolib.ArduinoConnect;
@@ -24,10 +26,8 @@ import com.av1rus.arduinoconnect.arduinolib.listener.ArduinoConnectListener;
 import com.av1rus.arduinoconnect.arduinolib.model.ConnectionState;
 import com.av1rus.arduinoconnect.arduinolib.model.LightColor;
 import com.av1rus.arduinoconnect.arduinolib.model.LightType;
+import com.av1rus.arduinoconnect.halowidget.ui.HaloWidget;
 import com.viewpagerindicator.TitlePageIndicator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends SlidingMenuActivity {
     private ViewPager mViewPager;
@@ -35,26 +35,22 @@ public class MainActivity extends SlidingMenuActivity {
     private ArduinoConnectApp mArduinoConnectApp;
 
     TextView mStateTV;
+    HaloWidget mLightsView;
 
 //    public static List<FragmentPager> fragments;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mStateTV = (TextView) findViewById(R.id.stateTV);
+        mLightsView = (HaloWidget) findViewById(R.id.haloWidget);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+
+        mLightsView.setTitle("Shak1ra");
 
         //create a new library
         mArduinoConnectApp = ArduinoConnectApp.getApp();
         mArduinoConnectApp.setArduinoLibrary(new ArduinoConnect());
-
-        Button button = (Button) findViewById(R.id.button);
-        mStateTV = (TextView) findViewById(R.id.stateTV);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
 //
 //        fragments = new ArrayList<FragmentPager>();
@@ -62,7 +58,6 @@ public class MainActivity extends SlidingMenuActivity {
 //        fragments.add(new FragmentPager("Log", new LogFragment()));
 
         final float density = getResources().getDisplayMetrics().density;
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mMyFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMyFragmentPagerAdapter);
 
@@ -78,7 +73,6 @@ public class MainActivity extends SlidingMenuActivity {
         indicator.setSelectedBold(true);
 
         setupArduino();
-
     }
 
     public void setupArduino(){
@@ -178,6 +172,17 @@ public class MainActivity extends SlidingMenuActivity {
                     break;
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId() == R.id.action_voice_command){
+            mLightsView.setHeadHaloColor(HaloWidget.HALO_RED);
+            mLightsView.setFogHealoColor(HaloWidget.HALO_RED);
+            Toast.makeText(this, "Voice Command", Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private static class MyFragmentPagerAdapter extends FragmentPagerAdapter {

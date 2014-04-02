@@ -9,5 +9,6 @@
     <string name="open">open</string>
     <string name="closed">closed</string>
     <string name="menu_settings">settings</string>
+    <string name="menu_voice_command">Speak</string>
 
 </resources>

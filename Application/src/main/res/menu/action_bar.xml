@@ -1,9 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-            android:id="@+id/action_add_card"
+            android:id="@+id/action_voice_command"
             android:orderInCategory="100"
             android:showAsAction="ifRoom"
-            android:icon="@drawable/ic_drawer"
-            android:title="@string/menu_settings"/>
+            android:icon="@drawable/ic_mic"
+            android:title="@string/menu_voice_command"/>
 </menu>

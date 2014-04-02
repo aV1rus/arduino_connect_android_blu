@@ -1,12 +1,12 @@
-apply plugin: 'android'
+apply plugin: 'android-library'
 
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.2"
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 19
+        minSdkVersion 11
+        targetSdkVersion 16
         versionCode 1
         versionName "1.0"
     }
@@ -19,11 +19,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:appcompat-v7:19.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    compile 'com.viewpagerindicator:library:2.4.1@aar'
-
-    compile project(':ArduinoLib');
-    compile project(':HaloWidget');
 }
