@@ -8,6 +8,7 @@ public class BluetoothDeviceException extends Exception {
     public static enum ExceptionCause{
         DEVICE_NOT_SET,
         DEVICE_NOT_FOUND,
+        DEVICE_NOT_PAIRED,
         BLUETOOTH_NOT_ENABLED,
     }
 

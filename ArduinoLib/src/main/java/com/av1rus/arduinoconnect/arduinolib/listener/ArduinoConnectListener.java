@@ -16,5 +16,7 @@ public interface ArduinoConnectListener {
 
     void onLightsStateChanged(LightColor color, LightType type);
 
+    void onBluetoothMessageReceived(String message);
+
     void onDeviceChanged(BluetoothDevice device);
 }

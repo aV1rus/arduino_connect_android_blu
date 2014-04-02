@@ -6,10 +6,14 @@ import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 
+import com.av1rus.arduinoconnect.arduinolib.exceptions.ArduinoLibraryException;
+import com.av1rus.arduinoconnect.arduinolib.exceptions.BluetoothDeviceException;
 import com.av1rus.arduinoconnect.arduinolib.listener.BluetoothListener;
 import com.av1rus.arduinoconnect.arduinolib.model.ConnectionState;
+import com.av1rus.arduinoconnect.arduinolib.utils.ByteUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +34,8 @@ public class BluetoothManager implements IBluetoothManager{
     OutputStream mOutputStream;
     Scanner mScanner;
     BluetoothListener mListener;
+
+    Pattern mEndLinePattern = Pattern.compile("[\\r\\n]+]");
 
     boolean mIsScanning;
 
@@ -62,6 +68,13 @@ public class BluetoothManager implements IBluetoothManager{
     }
 
     @Override
+    public void setBluetoothListener(Context context, BluetoothListener bluetoothListener) {
+        mListener = bluetoothListener;
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        context.registerReceiver(mBluetoothStateChangedReceiver, filter);
+    }
+
+    @Override
     public void sendStringToDevice(String message){
         try {
             if (mOutputStream != null) {
@@ -73,20 +86,21 @@ public class BluetoothManager implements IBluetoothManager{
     }
 
     @Override
-    public void connectToDevice(BluetoothDevice device, BluetoothListener bluetoothListener) {
-        mListener = bluetoothListener;
+    public void connectToDevice(BluetoothDevice device) throws BluetoothDeviceException, ArduinoLibraryException {
+        if(mListener == null){
+            throw new ArduinoLibraryException(ArduinoLibraryException.ExceptionCause.LISTENER_NOT_SET, "BluetoothManager: BluetoothListener must be set");
+        }
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             return;
         }
         if (!mBluetoothAdapter.isEnabled()) {
-            mListener.onBluetoothIsOf();
-            return;
+            throw new BluetoothDeviceException(BluetoothDeviceException.ExceptionCause.BLUETOOTH_NOT_ENABLED, "You must enable bluetooth");
         }
 
         //Make sure device is paired
-        if (mBluetoothSocket != null && device.getBondState() == BluetoothDevice.BOND_BONDED)  {
+        if (device.getBondState() == BluetoothDevice.BOND_BONDED)  {
             try {
                 Method m = device.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
                 mBluetoothSocket = (BluetoothSocket) m.invoke(device, 1);
@@ -100,12 +114,13 @@ public class BluetoothManager implements IBluetoothManager{
                 startScan();
 
             } catch (Exception e) {
+                mListener.onConnectionStateChanged(ConnectionState.STATE_ERROR_CONNECTING, device);
                 //listener ERROR
                 return;
             }
 
         } else {
-            //Log.d(TAG, "Devices are not paired anymore");
+            throw new BluetoothDeviceException(BluetoothDeviceException.ExceptionCause.DEVICE_NOT_PAIRED, "Device is not paired with phone");
         }
     }
 
@@ -122,13 +137,20 @@ public class BluetoothManager implements IBluetoothManager{
 
     @Override
     public void startScan(){
-        mScanner = new Scanner(new InputStreamReader(mInputStream));
-        mScanner.useDelimiter(Pattern.compile("[\\r\\n]+]"));
+//        mScanner = new Scanner(new InputStreamReader(mInputStream));
+//        mScanner.useDelimiter(mEndLinePattern);
+//
+//
+//        if(mScanner != null && mBluetoothSocket.isConnected() && !mIsScanning){
+//            Handler handler = new Handler();
+//            handler.postDelayed(mFilterScan, 1000);
+//        } else {
+//            mIsScanning = false;
+//        }
 
-
-        if(mScanner != null && mBluetoothSocket.isConnected() && !mIsScanning){
+        if(mBluetoothSocket.isConnected() && !mIsScanning){
             Handler handler = new Handler();
-            handler.postDelayed(mFilterScan, 1000);
+            handler.postDelayed(mBluetoothScan, 1000);
         } else {
             mIsScanning = false;
         }
@@ -139,64 +161,68 @@ public class BluetoothManager implements IBluetoothManager{
         mScanner = null;
     }
 
-    private Runnable mFilterScan = new Runnable(){
-        @Override
-        public void run() {
-            if(mScanner == null) return;
-
-            try {
-                mIsScanning = true;
-                while(mScanner.hasNext()){
-                    mListener.onBluetoothMessageReceived(mScanner.next());
-                }
-            } catch (Exception e) {
-
-                return;
-            }
-
-            if(mBluetoothSocket.isConnected()){
-                Handler handler = new Handler();
-                handler.postDelayed(this, 1000);
-            } else {
-                mIsScanning = false;
-            }
-
-        }
-    };
-
-//    private Runnable mBluetoothScan = new Runnable(){
+//    private Runnable mFilterScan = new Runnable(){
 //        @Override
 //        public void run() {
+//            if(mScanner == null) return;
+//
 //            try {
 //                mIsScanning = true;
-//                final byte[] bytes = new byte[1024];
-//                String reading = "";
-//                if (mBluetoothSocket != null && mBluetoothSocket.isConnected() && mInputStream != null && mOutputStream != null) {
-//
-//                    String str2 = ByteUtils.hexToString(ByteUtils.byteToHex(bytes, mInputStream.read(bytes)));
-//
-//
-////                    if (reading.length() > 6) {
-////                        if(!reading.trim().equals("DT:") && !reading.trim().equals("DT") && !reading.trim().equals("D")){
-////                            handleReceived(reading);
-////                            reading = "";}
-////                    }
-//
+//                if(mScanner.hasNext(mEndLinePattern))
+//                while(mScanner.hasNext(mEndLinePattern)){
+//                    mListener.onBluetoothMessageReceived(mScanner.next(mEndLinePattern));
 //                }
 //            } catch (Exception e) {
-//
+//                mListener.onConnectionStateChanged(ConnectionState.CONNECTION_ERROR, mBluetoothSocket.getRemoteDevice());
 //                return;
 //            }
 //
-//
 //            if(mBluetoothSocket.isConnected()){
 //                Handler handler = new Handler();
-//                handler.postDelayed(this, 1000);
+//                handler.postDelayed(this, 3000);
 //            } else {
 //                mIsScanning = false;
+//                mListener.onConnectionStateChanged(ConnectionState.STATE_DISCONNECTED, mBluetoothSocket.getRemoteDevice());
+//
 //            }
+//
 //        }
 //    };
+
+    private Runnable mBluetoothScan = new Runnable(){
+        @Override
+        public void run() {
+            try {
+                mIsScanning = true;
+                final byte[] bytes = new byte[1024];
+                if (mBluetoothSocket != null && mBluetoothSocket.isConnected() && mInputStream != null && mOutputStream != null) {
+//                    String str2 = ByteUtils.hexToString(ByteUtils.byteToHex(bytes, mInputStream.read(bytes)));
+
+
+//                    mListener.onBluetoothMessageReceived(str2);
+
+//                    if (reading.length() > 6) {
+//                        if(!reading.trim().equals("DT:") && !reading.trim().equals("DT") && !reading.trim().equals("D")){
+//                            handleReceived(reading);
+//                            reading = "";}
+//                    }
+
+                }
+            } catch (Exception e) {
+                mListener.onConnectionStateChanged(ConnectionState.CONNECTION_ERROR, mBluetoothSocket.getRemoteDevice());
+                return;
+            }
+
+
+            if(mBluetoothSocket.isConnected()){
+                Handler handler = new Handler();
+                handler.postDelayed(this, 3000);
+            } else {
+                mIsScanning = false;
+                mListener.onConnectionStateChanged(ConnectionState.STATE_DISCONNECTED, mBluetoothSocket.getRemoteDevice());
+            }
+        }
+    };
 
     private final BroadcastReceiver mBluetoothStateChangedReceiver = new BroadcastReceiver() {
         @Override

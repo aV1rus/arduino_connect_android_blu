@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.av1rus.arduinoconnect.application.R;
 import com.av1rus.arduinoconnect.application.app.ArduinoConnectApp;
+import com.av1rus.arduinoconnect.application.app.adapters.LogAdapter;
 import com.av1rus.arduinoconnect.application.app.adapters.PairedDevicesAdapter;
 
 import java.util.ArrayList;
@@ -22,17 +23,17 @@ import java.util.List;
 /**
  * Created by aV1rus on 4/1/14.
  */
-public class PairedDevicesFragment extends Fragment {
+public class LogFragment extends Fragment {
 
     Activity mActivity;
     Context mContext;
-    List<BluetoothDevice> devices;
+    List<String> messages;
     TextView textView;
     ListView listView;
 
 
-    public static PairedDevicesFragment newInstance() {
-        return new PairedDevicesFragment();
+    public static LogFragment newInstance() {
+        return new LogFragment();
     }
 
     @Override
@@ -54,20 +55,12 @@ public class PairedDevicesFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
+//        messages = new ArrayList<String>();
+//
+//        LogAdapter adapter = new LogAdapter(mActivity, messages);
+        textView.setText("Log: ");
+//        listView.setAdapter(adapter);
 
-        devices = new ArrayList<BluetoothDevice>();
-        devices.addAll(ArduinoConnectApp.getApp().getArduinoLibrary().getPairedDevices());
-        final PairedDevicesAdapter adapter = new PairedDevicesAdapter(mActivity, devices);
-
-        textView.setText("Set a new device:");
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ArduinoConnectApp.getApp().getArduinoLibrary().setBluetoothDevice(mActivity, devices.get(position));
-                adapter.notifyDataSetInvalidated();
-            }
-        });
     }
+
 }

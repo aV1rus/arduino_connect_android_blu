@@ -1,5 +1,6 @@
 package com.av1rus.arduinoconnect.application.ui.activity;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.av1rus.arduinoconnect.application.R;
 import com.av1rus.arduinoconnect.application.app.ArduinoConnectApp;
 import com.av1rus.arduinoconnect.application.model.FragmentPager;
+import com.av1rus.arduinoconnect.application.ui.fragment.LogFragment;
 import com.av1rus.arduinoconnect.application.ui.fragment.PairedDevicesFragment;
 import com.av1rus.arduinoconnect.arduinolib.ArduinoConnect;
 import com.av1rus.arduinoconnect.arduinolib.exceptions.ArduinoLibraryException;
@@ -24,6 +26,9 @@ import com.av1rus.arduinoconnect.arduinolib.model.LightColor;
 import com.av1rus.arduinoconnect.arduinolib.model.LightType;
 import com.viewpagerindicator.TitlePageIndicator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends SlidingMenuActivity {
     private ViewPager mViewPager;
     private MyFragmentPagerAdapter mMyFragmentPagerAdapter;
@@ -31,13 +36,11 @@ public class MainActivity extends SlidingMenuActivity {
 
     TextView mStateTV;
 
-    public static FragmentPager[] fragments = {
-            new FragmentPager("Paired Devices", PairedDevicesFragment.newInstance()),
-            new FragmentPager("Paired Devices 2", PairedDevicesFragment.newInstance())
-    };
+//    public static List<FragmentPager> fragments;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         //create a new library
         mArduinoConnectApp = ArduinoConnectApp.getApp();
@@ -53,6 +56,10 @@ public class MainActivity extends SlidingMenuActivity {
             }
         });
 
+//
+//        fragments = new ArrayList<FragmentPager>();
+//        fragments.add(new FragmentPager("Paired Devices", new PairedDevicesFragment()));
+//        fragments.add(new FragmentPager("Log", new LogFragment()));
 
         final float density = getResources().getDisplayMetrics().density;
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -70,26 +77,58 @@ public class MainActivity extends SlidingMenuActivity {
         indicator.setSelectedColor(Color.CYAN);
         indicator.setSelectedBold(true);
 
-
         setupArduino();
 
     }
 
     public void setupArduino(){
-        ArduinoConnect library = mArduinoConnectApp.getArduinoLibrary();
-        library.setArduinoConnectListener(new ArduinoConnectListener() {
+        final ArduinoConnect library = mArduinoConnectApp.getArduinoLibrary();
+        mStateTV.setText("Connecting");
+        library.setArduinoConnectListener(this, new ArduinoConnectListener() {
             @Override
             public void onConnectionStateChanged(ConnectionState state, BluetoothDevice device) {
                 switch(state){
                     case STATE_CONNECTED:
                         mStateTV.setText(device.getName()+": Connected");
-                        mViewPager.setCurrentItem(1);
+//                        mViewPager.setCurrentItem(1);
                         break;
+                    case STATE_DISCONNECTED:
+                        mStateTV.setText(device.getName()+": Disconnected");
+//                        mViewPager.setCurrentItem(0);
+                        break;
+                    case STATE_ERROR_CONNECTING:
+                        mStateTV.setText(device.getName()+": Error Connected");
+                        break;
+                    case CONNECTION_ERROR:
+                        mStateTV.setText(device.getName()+": Connection Error");
+                        break;
+                    default:
+                        mStateTV.setText(device.getName()+": State Change");
+                        break;
+
                 }
             }
 
             @Override
             public void onBluetoothStateChanged(int state) {
+                switch(state){
+                    case BluetoothAdapter.STATE_ON:
+                        connectToDevice();
+                        mStateTV.setText("Bluetooth On");
+                        break;
+                    case BluetoothAdapter.STATE_OFF:
+                        mStateTV.setText("Bluetooth Off");
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        mStateTV.setText("Bluetooth Turning On");
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        mStateTV.setText("Bluetooth Turning Off");
+                        break;
+                    default:
+                        mStateTV.setText("Error");
+                        break;
+                }
 
             }
 
@@ -99,38 +138,46 @@ public class MainActivity extends SlidingMenuActivity {
             }
 
             @Override
-            public void onDeviceChanged(BluetoothDevice device) {
+            public void onBluetoothMessageReceived(String message) {
+                mStateTV.setText("Message: "+message);
+            }
 
+            @Override
+            public void onDeviceChanged(BluetoothDevice device) {
+                connectToDevice();
             }
         });
 
         if(library.bluetoothEnabled()){
-            try {
-                library.startArduinoConnection(this);
-            } catch (BluetoothDeviceException e) {
-                switch(e.getCausedBy()){
-                    case BLUETOOTH_NOT_ENABLED:
-                        mStateTV.setText("Enable Bluetooth");
-                        break;
-                    case DEVICE_NOT_FOUND:
-                        mStateTV.setText("Device Not Found");
-                        break;
-                    case DEVICE_NOT_SET:
-                        mStateTV.setText("Select a paired device before continuing");
-                        break;
-                }
-            } catch (ArduinoLibraryException e) {
-                switch(e.getCausedBy()){
-                    case LISTENER_NOT_SET:
-                        mStateTV.setText("LISTENER NOT SET");
-                        break;
-                }
-            }
+            connectToDevice();
         } else {
             mStateTV.setText("You must enable Bluetooth");
         }
     }
 
+    private void connectToDevice(){
+        try {
+            mArduinoConnectApp.getArduinoLibrary().startArduinoConnection(this);
+        } catch (BluetoothDeviceException e) {
+            switch(e.getCausedBy()){
+                case BLUETOOTH_NOT_ENABLED:
+                    mStateTV.setText("Enable Bluetooth");
+                    break;
+                case DEVICE_NOT_FOUND:
+                    mStateTV.setText("Device Not Found");
+                    break;
+                case DEVICE_NOT_SET:
+                    mStateTV.setText("Select a paired device before continuing");
+                    break;
+            }
+        } catch (ArduinoLibraryException e) {
+            switch(e.getCausedBy()){
+                case LISTENER_NOT_SET:
+                    mStateTV.setText("LISTENER NOT SET");
+                    break;
+            }
+        }
+    }
 
     private static class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -140,17 +187,30 @@ public class MainActivity extends SlidingMenuActivity {
 
         @Override
         public Fragment getItem(int index) {
-                return fragments[index].getFragment();
+            switch(index){
+                case 0:
+                    return PairedDevicesFragment.newInstance();
+                case 1:
+                    return LogFragment.newInstance();
+            }
+
+            return PairedDevicesFragment.newInstance();
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            return fragments[position].getTitle();
+        public CharSequence getPageTitle(int index) {
+            switch(index){
+                case 0:
+                    return "Paired Devices";
+                case 1:
+                    return "Log";
+            }
+            return "";
         }
 
         @Override
         public int getCount() {
-            return fragments.length;
+            return 2;
         }
     }
 

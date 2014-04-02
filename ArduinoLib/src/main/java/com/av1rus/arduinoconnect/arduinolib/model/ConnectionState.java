@@ -6,5 +6,6 @@ package com.av1rus.arduinoconnect.arduinolib.model;
 public enum ConnectionState {
     STATE_CONNECTED,
     STATE_DISCONNECTED,
-    STATE_ERROR_CONNECTING
+    STATE_ERROR_CONNECTING,
+    CONNECTION_ERROR,
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- http://stackoverflow.com/questions/11234375/how-did-google-manage-to-do-this-slide-actionbar-in-android-application/11367825#11367825 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:background="@drawable/list_selector"
+    android:paddingTop="5dp">
+
+    <TextView
+        android:id="@+id/messageTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/slidemenu_foreground_color"
+        android:textSize="14sp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/menu_icon"
+        android:layout_marginLeft="10dp"/>
+
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="2px"
+        android:background="@drawable/bg_slide_menu_divider"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_alignParentBottom="true">
+    </LinearLayout>
+
+</RelativeLayout>
