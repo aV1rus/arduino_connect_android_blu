@@ -30,9 +30,14 @@ public class PairedDevicesFragment extends Fragment {
     TextView textView;
     ListView listView;
 
+    private static PairedDevicesFragment mPairedDevicesFragment;
 
-    public static PairedDevicesFragment newInstance() {
-        return new PairedDevicesFragment();
+
+    public static PairedDevicesFragment getInstance() {
+        if(mPairedDevicesFragment == null){
+            mPairedDevicesFragment = new PairedDevicesFragment();
+        }
+        return mPairedDevicesFragment;
     }
 
     @Override

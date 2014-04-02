@@ -90,14 +90,14 @@ public class MainActivity extends SlidingMenuActivity {
                 switch(state){
                     case STATE_CONNECTED:
                         mStateTV.setText(device.getName()+": Connected");
-//                        mViewPager.setCurrentItem(1);
+                        mViewPager.setCurrentItem(1);
                         break;
                     case STATE_DISCONNECTED:
                         mStateTV.setText(device.getName()+": Disconnected");
-//                        mViewPager.setCurrentItem(0);
+                        mViewPager.setCurrentItem(0);
                         break;
                     case STATE_ERROR_CONNECTING:
-                        mStateTV.setText(device.getName()+": Error Connected");
+                        mStateTV.setText(device.getName()+": Error Connecting");
                         break;
                     case CONNECTION_ERROR:
                         mStateTV.setText(device.getName()+": Connection Error");
@@ -139,6 +139,7 @@ public class MainActivity extends SlidingMenuActivity {
 
             @Override
             public void onBluetoothMessageReceived(String message) {
+                LogFragment.getInstance().updateLog(message);
                 mStateTV.setText("Message: "+message);
             }
 
@@ -189,12 +190,12 @@ public class MainActivity extends SlidingMenuActivity {
         public Fragment getItem(int index) {
             switch(index){
                 case 0:
-                    return PairedDevicesFragment.newInstance();
+                    return PairedDevicesFragment.getInstance();
                 case 1:
-                    return LogFragment.newInstance();
+                    return LogFragment.getInstance();
             }
 
-            return PairedDevicesFragment.newInstance();
+            return PairedDevicesFragment.getInstance();
         }
 
         @Override

@@ -137,6 +137,7 @@ public class BluetoothManager implements IBluetoothManager{
 
     @Override
     public void startScan(){
+        mListener.onBluetoothMessageReceived("Starting scan");
 //        mScanner = new Scanner(new InputStreamReader(mInputStream));
 //        mScanner.useDelimiter(mEndLinePattern);
 //
@@ -199,7 +200,7 @@ public class BluetoothManager implements IBluetoothManager{
 //                    String str2 = ByteUtils.hexToString(ByteUtils.byteToHex(bytes, mInputStream.read(bytes)));
 
 
-//                    mListener.onBluetoothMessageReceived(str2);
+                    mListener.onBluetoothMessageReceived("Message");
 
 //                    if (reading.length() > 6) {
 //                        if(!reading.trim().equals("DT:") && !reading.trim().equals("DT") && !reading.trim().equals("D")){
@@ -214,7 +215,7 @@ public class BluetoothManager implements IBluetoothManager{
             }
 
 
-            if(mBluetoothSocket.isConnected()){
+            if(true){//mBluetoothSocket.isConnected()){
                 Handler handler = new Handler();
                 handler.postDelayed(this, 3000);
             } else {

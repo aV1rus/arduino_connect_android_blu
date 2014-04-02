@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.av1rus.arduinoconnect.application.R;
 import com.av1rus.arduinoconnect.application.app.ArduinoConnectApp;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,6 +28,13 @@ public class LogAdapter extends BaseAdapter {
     public LogAdapter(Activity activity, List<String> items) {
         this.mActivity = activity;
         this.mItems = items;
+
+//        new ArrayList<String>();
+//
+//        for(int i = items.size(); i >= 0; i--){
+//            mItems.add(items.get(i) + " " + i);
+//        }
+
     }
 
     public int getCount() {

@@ -52,7 +52,6 @@ public class SlidingMenuActivity extends FragmentActivity {
 
         };
 
-
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
 
 

@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Application/Application.iml" filepath="$PROJECT_DIR$/Application/Application.iml" />
       <module fileurl="file://$PROJECT_DIR$/ArduinoLib/ArduinoLib.iml" filepath="$PROJECT_DIR$/ArduinoLib/ArduinoLib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Arduino_Connect_BLU.iml" filepath="$PROJECT_DIR$/Arduino_Connect_BLU.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Arduino_Connect.iml" filepath="$PROJECT_DIR$/Arduino_Connect.iml" />
     </modules>
   </component>
 </project>
