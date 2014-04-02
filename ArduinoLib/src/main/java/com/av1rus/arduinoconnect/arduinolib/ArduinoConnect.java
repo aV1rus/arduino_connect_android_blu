@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 
+import com.av1rus.arduinoconnect.arduinolib.exceptions.ArduinoLibraryException;
 import com.av1rus.arduinoconnect.arduinolib.listener.ArduinoConnectListener;
 import com.av1rus.arduinoconnect.arduinolib.listener.BluetoothListener;
 import com.av1rus.arduinoconnect.arduinolib.bluetooth.BluetoothManager;
@@ -29,9 +30,11 @@ public class ArduinoConnect implements IArduinoConnect{
         }
     }
 
+
+
     @Override
-    public Set<BluetoothDevice> getNearbyDevices() {
-        return blueManager.getNearbyDevices();
+    public Set<BluetoothDevice> getPairedDevices() {
+        return blueManager.getPairedDevices();
     }
 
     @Override
@@ -45,24 +48,13 @@ public class ArduinoConnect implements IArduinoConnect{
     }
 
     @Override
-    public void setBluetoothDevice(Activity activity, BluetoothDevice device) {
-        SharedPrefs.storeCacheValue(activity, "defaultBluetooth", device.getAddress());
+    public void setArduinoConnectListener(ArduinoConnectListener listener) {
+        mListener = listener;
     }
 
     @Override
-    public void startArduinoConnection(Activity activity, ArduinoConnectListener listener) throws BluetoothDeviceException{
-        mListener = listener;
-        BluetoothDevice device = getSavedBluetoothDevice(activity);
-
-        if(device == null){
-            throw new BluetoothDeviceException(BluetoothDeviceException.ExceptionCause.DEVICE_NOT_SET, "BluetoothDevice was never set... Method setBluetoothDevice must be called at any time before this.");
-        }
-
-        if(!bluetoothEnabled()){
-            throw new BluetoothDeviceException(BluetoothDeviceException.ExceptionCause.BLUETOOTH_NOT_ENABLED, "BluetoothDevice was never set... Method setBluetoothDevice must be called at any time before this.");
-        }
-
-        blueManager.connectToDevice(device, mBlueListener);
+    public void setBluetoothDevice(Activity activity, BluetoothDevice device) {
+        SharedPrefs.storeCacheValue(activity, "defaultBluetooth", device.getAddress());
     }
 
     @Override
@@ -75,7 +67,8 @@ public class ArduinoConnect implements IArduinoConnect{
         blueManager.sendStringToDevice(message);
     }
 
-    private BluetoothDevice getSavedBluetoothDevice(Activity activity){
+    @Override
+    public BluetoothDevice getSavedBluetoothDevice(Activity activity){
         String s = SharedPrefs.getCachedString(activity, "defaultBluetooth", null);
         if(s != null){
             try{
@@ -86,6 +79,25 @@ public class ArduinoConnect implements IArduinoConnect{
         }
 
         return null;
+    }
+
+    @Override
+    public void startArduinoConnection(Activity activity) throws BluetoothDeviceException, ArduinoLibraryException {
+        BluetoothDevice device = getSavedBluetoothDevice(activity);
+
+        if(device == null){
+            throw new BluetoothDeviceException(BluetoothDeviceException.ExceptionCause.DEVICE_NOT_SET, "BluetoothDevice was never set... Method setBluetoothDevice must be called at any time before this.");
+        }
+
+        if(!bluetoothEnabled()){
+            throw new BluetoothDeviceException(BluetoothDeviceException.ExceptionCause.BLUETOOTH_NOT_ENABLED, "BluetoothDevice was never set... Method setBluetoothDevice must be called at any time before this.");
+        }
+
+        if(mListener == null){
+            throw new ArduinoLibraryException(ArduinoLibraryException.ExceptionCause.LISTENER_NOT_SET, "You must set the listener before starting connection");
+        }
+
+        blueManager.connectToDevice(device, mBlueListener);
     }
 
     private void processReceivedMessage(String message){

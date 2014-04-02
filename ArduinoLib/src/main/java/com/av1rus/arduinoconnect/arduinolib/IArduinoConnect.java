@@ -3,6 +3,7 @@ package com.av1rus.arduinoconnect.arduinolib;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 
+import com.av1rus.arduinoconnect.arduinolib.exceptions.ArduinoLibraryException;
 import com.av1rus.arduinoconnect.arduinolib.exceptions.BluetoothDeviceException;
 import com.av1rus.arduinoconnect.arduinolib.listener.ArduinoConnectListener;
 
@@ -13,15 +14,19 @@ import java.util.Set;
  */
 public interface IArduinoConnect {
 
-    Set<BluetoothDevice> getNearbyDevices();
+    Set<BluetoothDevice> getPairedDevices();
 
     BluetoothDevice getConnectedDevice();
 
     boolean bluetoothEnabled();
 
+    void setArduinoConnectListener(ArduinoConnectListener listener);
+
     void setBluetoothDevice(Activity activity, BluetoothDevice device);
 
-    void startArduinoConnection(Activity activity, ArduinoConnectListener listener) throws BluetoothDeviceException;
+    BluetoothDevice getSavedBluetoothDevice(Activity activity);
+
+    void startArduinoConnection(Activity activity) throws BluetoothDeviceException, ArduinoLibraryException;
 
     void stopArduinoConnection();
 

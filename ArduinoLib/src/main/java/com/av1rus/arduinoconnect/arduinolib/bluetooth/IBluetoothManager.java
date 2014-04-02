@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public interface IBluetoothManager {
 
-    Set<BluetoothDevice> getNearbyDevices();
+    Set<BluetoothDevice> getPairedDevices();
 
     BluetoothDevice getConnectedDevice();
 

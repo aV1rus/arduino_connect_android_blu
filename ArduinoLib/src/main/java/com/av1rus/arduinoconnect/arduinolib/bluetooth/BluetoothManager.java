@@ -42,7 +42,7 @@ public class BluetoothManager implements IBluetoothManager{
     }
 
     @Override
-    public Set<BluetoothDevice> getNearbyDevices(){
+    public Set<BluetoothDevice> getPairedDevices(){
         return BluetoothAdapter.getDefaultAdapter().getBondedDevices();
     }
 

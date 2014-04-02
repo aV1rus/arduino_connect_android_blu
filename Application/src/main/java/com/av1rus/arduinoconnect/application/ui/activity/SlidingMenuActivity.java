@@ -1,9 +1,10 @@
 package com.av1rus.arduinoconnect.application.ui.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,40 +17,46 @@ import java.util.ArrayList;
 /**
  * Created by nick on 4/1/14.
  */
-public class SlidingMenuActivity extends ActionBarActivity {
+public class SlidingMenuActivity extends FragmentActivity {
 
     String mTitle = "Arduino Connect";
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
+
+    public DrawerLayout mDrawerLayout;
+    public ListView mDrawerList;
+    public ActionBarDrawerToggle mDrawerToggle;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_main);
+
         getActionBar().setTitle(mTitle);
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_main));
-
-
+//        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_main));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
                 R.drawable.ic_drawer,
                 R.string.open,
                 R.string.closed){
             public void onDrawerClosed(View view){
-                  invalidateOptionsMenu();
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
             }
             public void onDrawerOpened(View view){
+                super.onDrawerOpened(view);
                 invalidateOptionsMenu();
             }
 
         };
 
-//        refreshDrawer();
+
+        mDrawerList = (ListView) findViewById(R.id.drawer_list);
+
+
+        refreshDrawer();
     }
 
     @Override
