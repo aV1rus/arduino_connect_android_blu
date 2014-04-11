@@ -1,0 +1,117 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/commandLabelTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/red"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:text="Red" />
+
+            <TextView
+                android:id="@+id/white"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:text="White" />
+
+            <TextView
+                android:id="@+id/both"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:text="Both" />
+
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:paddingRight="20dp"
+                android:gravity="center"
+                android:text="Heads" />
+
+            <CheckBox
+                android:id="@+id/checkHeadRed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_onoffselector"
+                android:paddingRight="20dp" />
+
+            <CheckBox
+                android:id="@+id/checkHeadWhite"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_onoffselector"
+                android:paddingRight="20dp" />
+
+            <CheckBox
+                android:id="@+id/checkHeadBoth"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_onoffselector"
+                android:paddingRight="20dp" />
+
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:paddingRight="20dp"
+                android:gravity="center"
+                android:text="Fogs" />
+
+            <CheckBox
+                android:id="@+id/checkFogRed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_onoffselector"
+                android:paddingRight="20dp" />
+
+            <CheckBox
+                android:id="@+id/checkFogWhite"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_onoffselector"
+                android:paddingRight="20dp" />
+
+            <CheckBox
+                android:id="@+id/checkFogBoth"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_onoffselector"
+                android:paddingRight="20dp" />
+
+        </TableRow>
+        </TableLayout>
+
+</LinearLayout>

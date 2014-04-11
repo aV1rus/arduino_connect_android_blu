@@ -72,9 +72,13 @@ public class PairedDevicesAdapter extends BaseAdapter {
 
         label.setTextColor(mActivity.getResources().getColor(R.color.black));
 
-        if(item.getAddress().equals(ArduinoConnectApp.getApp().getArduinoLibrary().getSavedBluetoothDevice(mActivity).getAddress())) {
-            ((ImageView) row.findViewById(R.id.menu_icon)).setImageDrawable(mActivity.getResources().getDrawable(R.drawable.checkbox_checked));
-        } else {
+
+        if( (ArduinoConnectApp.getApp().getArduinoLibrary() != null && ArduinoConnectApp.getApp().getArduinoLibrary().getSavedBluetoothDevice(mActivity) != null)
+            && item.getAddress().equals(ArduinoConnectApp.getApp().getArduinoLibrary().getSavedBluetoothDevice(mActivity).getAddress() )) {
+
+                ((ImageView) row.findViewById(R.id.menu_icon)).setImageDrawable(mActivity.getResources().getDrawable(R.drawable.checkbox_checked));
+
+        }else {
             ((ImageView) row.findViewById(R.id.menu_icon)).setImageDrawable(mActivity.getResources().getDrawable(R.drawable.checkbox_unchecked));
         }
 

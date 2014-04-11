@@ -28,14 +28,14 @@ public class LogFragment extends Fragment {
     ListView mListView;
     LogAdapter mLogListAdapter;
 
-    private static LogFragment mLogFragment;
+    private static LogFragment mFragment;
 
 
     public static LogFragment getInstance() {
-        if(mLogFragment == null){
-            mLogFragment = new LogFragment();
+        if(mFragment == null){
+            mFragment = new LogFragment();
         }
-        return mLogFragment;
+        return mFragment;
     }
 
     @Override

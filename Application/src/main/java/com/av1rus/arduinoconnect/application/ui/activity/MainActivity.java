@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.av1rus.arduinoconnect.application.R;
 import com.av1rus.arduinoconnect.application.app.ArduinoConnectApp;
+import com.av1rus.arduinoconnect.application.ui.fragment.ControlFragment;
 import com.av1rus.arduinoconnect.application.ui.fragment.LogFragment;
 import com.av1rus.arduinoconnect.application.ui.fragment.PairedDevicesFragment;
 import com.av1rus.arduinoconnect.arduinolib.ArduinoConnect;
@@ -35,7 +36,7 @@ public class MainActivity extends SlidingMenuActivity {
     private ArduinoConnectApp mArduinoConnectApp;
 
     TextView mStateTV;
-    HaloWidget mLightsView;
+    public HaloWidget mLightsView;
 
 //    public static List<FragmentPager> fragments;
     @Override
@@ -187,6 +188,8 @@ public class MainActivity extends SlidingMenuActivity {
 
     private static class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
+        String titles[] = {"Paired Devices", "Controls", "Log"};
+
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -197,6 +200,8 @@ public class MainActivity extends SlidingMenuActivity {
                 case 0:
                     return PairedDevicesFragment.getInstance();
                 case 1:
+                    return ControlFragment.getInstance();
+                case 2:
                     return LogFragment.getInstance();
             }
 
@@ -205,13 +210,7 @@ public class MainActivity extends SlidingMenuActivity {
 
         @Override
         public CharSequence getPageTitle(int index) {
-            switch(index){
-                case 0:
-                    return "Paired Devices";
-                case 1:
-                    return "Log";
-            }
-            return "";
+            return titles[index];
         }
 
         @Override
