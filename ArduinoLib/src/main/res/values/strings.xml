@@ -1,0 +1,5 @@
+<resources>
+    <string name="notif_title">title</string>
+    <string name="notif_ticker">ticker</string>
+    <string name="notif_content">content</string>
+</resources>

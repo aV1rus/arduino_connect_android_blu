@@ -19,6 +19,22 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".service.UnlockMonitor">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+        <!--<receiver android:name=".service.StartupIntentReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+                <!--<category android:name="android.intent.category.HOME" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+
         <service android:enabled="true" android:name="com.av1rus.arduinoconnect.arduinolib.service.ArduinoConnectService" />
     </application>
 

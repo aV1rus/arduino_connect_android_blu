@@ -12,6 +12,7 @@ import com.av1rus.arduinoconnect.arduinolib.IArduinoConnect;
 import com.av1rus.arduinoconnect.arduinolib.exceptions.ArduinoLibraryException;
 import com.av1rus.arduinoconnect.arduinolib.exceptions.BluetoothDeviceException;
 import com.av1rus.arduinoconnect.arduinolib.listener.ArduinoConnectListener;
+import com.av1rus.arduinoconnect.arduinolib.utils.MyDialog;
 import com.av1rus.datacontract.model.LightColor;
 import com.av1rus.datacontract.model.LightType;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class ArduinoConnectService extends Service{
 
     @Override
     public IBinder onBind(Intent intent) {
+        MyDialog.showNotification(this, 1001, "title", "BOUND", "message");
         return mBinder;
     }
 
@@ -44,12 +46,15 @@ public class ArduinoConnectService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         checkLib();
+        MyDialog.showNotification(this, 1000, "title", "ticker", "message");
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        MyDialog.removeNotification(this, 1000);
+        MyDialog.removeNotification(this, 1001);
         arduinoLib.disconnectAll(this);
         stopSelf();
     }
