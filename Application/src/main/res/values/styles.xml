@@ -3,6 +3,6 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!--<item name="android:background">@drawable/bg_main</item>-->
+        <item name="android:textColor">@color/textColor</item>
     </style>
-
 </resources>

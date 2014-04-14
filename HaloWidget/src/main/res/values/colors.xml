@@ -6,5 +6,6 @@
     <color name="halo_both">#F0F</color>
 
     <color name="halo_title">#FF00FF00</color>
+    <color name="halo_off">#000</color>
 
 </resources>

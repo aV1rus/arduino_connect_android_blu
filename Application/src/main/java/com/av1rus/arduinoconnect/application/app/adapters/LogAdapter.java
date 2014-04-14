@@ -79,8 +79,6 @@ public class LogAdapter extends BaseAdapter {
 
         label.setText(item);
 
-        label.setTextColor(mActivity.getResources().getColor(R.color.black));
-
         return row;
     }
 }

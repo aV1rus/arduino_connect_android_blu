@@ -1,21 +1,24 @@
 package com.av1rus.arduinoconnect.halowidget.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.av1rus.arduinoconnect.halowidget.R;
+import com.av1rus.datacontract.model.LightColor;
+import com.av1rus.datacontract.model.LightType;
 
 /**
  * Created by nick on 4/2/14.
  */
 public class HaloWidget extends LinearLayout {
 
+    private static final String TAG = "HaloWidget";
     GradientDrawable mLeftHeadHalo;
     GradientDrawable mRightHeadHalo;
     GradientDrawable mLeftFogHalo;
@@ -27,6 +30,7 @@ public class HaloWidget extends LinearLayout {
     public static int HALO_RED = R.color.halo_red;
     public static int HALO_WHITE = R.color.halo_white;
     public static int HALO_BOTH = R.color.halo_both;
+    public static int HALO_OFF = R.color.halo_off;
 
     public HaloWidget(Context context){
         super(context);
@@ -76,8 +80,8 @@ public class HaloWidget extends LinearLayout {
         mLeftHeadHalo = (GradientDrawable)findViewById(R.id.leftHeadCV).getBackground();
         mLeftFogHalo = (GradientDrawable)findViewById(R.id.leftFogCV).getBackground();
 
-        setHeadHaloColor(HALO_WHITE);
-        setFogHealoColor(HALO_WHITE);
+//        setHeadHaloColor(HALO_WHITE);
+//        setFogHaloColor(HALO_WHITE);
 
         if(mWidgetTitle != null){
             setTitle(mWidgetTitle);
@@ -85,17 +89,33 @@ public class HaloWidget extends LinearLayout {
     }
 
     public void setHeadHaloColor(int color){
-        color = getColor(color);
-        mRightHeadHalo.setStroke(mStrokeSize, color);
-        mLeftHeadHalo.setStroke(mStrokeSize, color);
+        int c = getColor(color);
+        mRightHeadHalo.setStroke(mStrokeSize, c);
+        mLeftHeadHalo.setStroke(mStrokeSize, c);
     }
 
-    public void setFogHealoColor(int color){
-        color = getColor(color);
-        mRightFogHalo.setStroke(mStrokeSize, color);
-        mLeftFogHalo.setStroke(mStrokeSize, color);
+    public void setFogHaloColor(int color){
+        int c = getColor(color);
+        mRightFogHalo.setStroke(mStrokeSize, c);
+        mLeftFogHalo.setStroke(mStrokeSize, c);
     }
 
+    public void setLightsState(LightType type, LightColor color){
+        if(type == LightType.HeadHalo){
+            if(color == LightColor.Red) setHeadHaloColor(HALO_RED);
+            else if(color == LightColor.White) setHeadHaloColor(HALO_WHITE);
+            else if(color == LightColor.Both) setHeadHaloColor(HALO_BOTH);
+            else setHeadHaloColor(HALO_OFF);
+        } else if(type == LightType.FogHalo){
+            if(color == LightColor.Red) setFogHaloColor(HALO_RED);
+            else if(color == LightColor.White) setFogHaloColor(HALO_WHITE);
+            else if(color == LightColor.Both) setFogHaloColor(HALO_BOTH);
+            else setFogHaloColor(HALO_OFF);
+        } else {
+            Log.e(TAG, "setLightsState :: No type can be mapped for color change");
+        }
+
+    }
 
     private int getColor(int color){
         if(color == HALO_RED || color == HALO_WHITE || color == HALO_BOTH){

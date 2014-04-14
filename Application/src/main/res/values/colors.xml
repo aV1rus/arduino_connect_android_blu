@@ -16,6 +16,9 @@
     <color name="disabled_foreground">#60ffffff</color>
     <color name="disabled_background">#888888</color>
 
+
+    <color name="textColor">@color/light_grey</color>
+
     <!-- App -->
     <color name="primary_color">#34A326</color>
     <color name="background_color">@color/black</color>

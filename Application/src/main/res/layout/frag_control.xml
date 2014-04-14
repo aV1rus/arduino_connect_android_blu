@@ -23,21 +23,21 @@
                 android:text="" />
 
             <TextView
-                android:id="@+id/red"
+                android:id="@+id/redTV"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="20dp"
                 android:text="Red" />
 
             <TextView
-                android:id="@+id/white"
+                android:id="@+id/whiteTV"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="20dp"
                 android:text="White" />
 
             <TextView
-                android:id="@+id/both"
+                android:id="@+id/bothTV"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="20dp"

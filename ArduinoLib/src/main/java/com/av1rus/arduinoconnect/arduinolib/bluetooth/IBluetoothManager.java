@@ -30,6 +30,8 @@ public interface IBluetoothManager {
 
     void disconnectDevice();
 
+    void disconnectAll(Context context);
+
     void startScan();
 
     void stopScan();

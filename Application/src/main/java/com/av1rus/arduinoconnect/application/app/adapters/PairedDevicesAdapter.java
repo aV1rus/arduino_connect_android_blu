@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.av1rus.arduinoconnect.application.R;
 import com.av1rus.arduinoconnect.application.app.ArduinoConnectApp;
+import com.av1rus.arduinoconnect.arduinolib.service.ArduinoConnectService;
+import com.av1rus.arduinoconnect.arduinolib.service.BluetoothService;
 
 import java.util.List;
 
@@ -70,11 +72,8 @@ public class PairedDevicesAdapter extends BaseAdapter {
 
         label.setText(item.getName());
 
-        label.setTextColor(mActivity.getResources().getColor(R.color.black));
-
-
-        if( (ArduinoConnectApp.getApp().getArduinoLibrary() != null && ArduinoConnectApp.getApp().getArduinoLibrary().getSavedBluetoothDevice(mActivity) != null)
-            && item.getAddress().equals(ArduinoConnectApp.getApp().getArduinoLibrary().getSavedBluetoothDevice(mActivity).getAddress() )) {
+        if( (ArduinoConnectService.getSavedBluetoothDevice(mActivity) != null)
+            && item.getAddress().equals(ArduinoConnectService.getSavedBluetoothDevice(mActivity).getAddress() )) {
 
                 ((ImageView) row.findViewById(R.id.menu_icon)).setImageDrawable(mActivity.getResources().getDrawable(R.drawable.checkbox_checked));
 

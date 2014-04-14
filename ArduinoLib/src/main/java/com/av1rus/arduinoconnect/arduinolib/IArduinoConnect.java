@@ -7,6 +7,8 @@ import android.content.Context;
 import com.av1rus.arduinoconnect.arduinolib.exceptions.ArduinoLibraryException;
 import com.av1rus.arduinoconnect.arduinolib.exceptions.BluetoothDeviceException;
 import com.av1rus.arduinoconnect.arduinolib.listener.ArduinoConnectListener;
+import com.av1rus.datacontract.model.LightColor;
+import com.av1rus.datacontract.model.LightType;
 
 import java.util.Set;
 
@@ -19,18 +21,22 @@ public interface IArduinoConnect {
 
     BluetoothDevice getConnectedDevice();
 
+    BluetoothDevice getSavedBluetoothDevice(Context context);
+
     boolean bluetoothEnabled();
 
     void setArduinoConnectListener(Context context, ArduinoConnectListener listener);
 
-    void setBluetoothDevice(Activity activity, BluetoothDevice device);
+    void setBluetoothDevice(Context context, BluetoothDevice device);
 
-    BluetoothDevice getSavedBluetoothDevice(Activity activity);
-
-    void startArduinoConnection(Activity activity) throws BluetoothDeviceException, ArduinoLibraryException;
+    void startArduinoConnection(Context context) throws BluetoothDeviceException, ArduinoLibraryException;
 
     void stopArduinoConnection();
 
+    void disconnectAll(Context context);
+
     void sendMessage(String message);
+
+    void setLightState(LightType type, LightColor color);
 
 }

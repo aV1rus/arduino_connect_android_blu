@@ -2,21 +2,24 @@ package com.av1rus.arduinoconnect.application.ui.activity;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.av1rus.arduinoconnect.application.R;
 import com.av1rus.arduinoconnect.application.app.ArduinoConnectApp;
+import com.av1rus.arduinoconnect.application.model.listener.ControlFragmentListener;
 import com.av1rus.arduinoconnect.application.ui.fragment.ControlFragment;
 import com.av1rus.arduinoconnect.application.ui.fragment.LogFragment;
 import com.av1rus.arduinoconnect.application.ui.fragment.PairedDevicesFragment;
@@ -25,20 +28,49 @@ import com.av1rus.arduinoconnect.arduinolib.exceptions.ArduinoLibraryException;
 import com.av1rus.arduinoconnect.arduinolib.exceptions.BluetoothDeviceException;
 import com.av1rus.arduinoconnect.arduinolib.listener.ArduinoConnectListener;
 import com.av1rus.arduinoconnect.arduinolib.model.ConnectionState;
-import com.av1rus.arduinoconnect.arduinolib.model.LightColor;
-import com.av1rus.arduinoconnect.arduinolib.model.LightType;
+import com.av1rus.arduinoconnect.arduinolib.service.ArduinoConnectService;
+import com.av1rus.arduinoconnect.arduinolib.utils.MyDialog;
 import com.av1rus.arduinoconnect.halowidget.ui.HaloWidget;
+import com.av1rus.datacontract.model.LightColor;
+import com.av1rus.datacontract.model.LightType;
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class MainActivity extends SlidingMenuActivity {
     private ViewPager mViewPager;
     private MyFragmentPagerAdapter mMyFragmentPagerAdapter;
     private ArduinoConnectApp mArduinoConnectApp;
+    ArduinoConnectService mArduinoService = null;
+
 
     TextView mStateTV;
     public HaloWidget mLightsView;
 
-//    public static List<FragmentPager> fragments;
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        unbindService(mServiceConn);
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        //create a new library
+        mArduinoConnectApp = ArduinoConnectApp.getApp();
+//        mArduinoConnectApp.setArduinoLibrary(new ArduinoConnect());
+        bindService(new Intent(this, ArduinoConnectService.class), mServiceConn, BIND_AUTO_CREATE);
+//        PairedDevicesFragment.getInstance();
+//        ControlFragment.getInstance(mControlFragmentListener);
+//        LogFragment.getInstance();
+
+//        setupArduino();
+
+    }
+
+
+    //    public static List<FragmentPager> fragments;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +81,6 @@ public class MainActivity extends SlidingMenuActivity {
 
         mLightsView.setTitle("Shak1ra");
 
-        //create a new library
-        mArduinoConnectApp = ArduinoConnectApp.getApp();
-        mArduinoConnectApp.setArduinoLibrary(new ArduinoConnect());
 
 //
 //        fragments = new ArrayList<FragmentPager>();
@@ -70,16 +99,31 @@ public class MainActivity extends SlidingMenuActivity {
         indicator.setFooterIndicatorHeight(3 * density); // 3dp
         indicator.setFooterIndicatorStyle(TitlePageIndicator.IndicatorStyle.Underline);
         indicator.setTextColor(0xAA000000);
-        indicator.setSelectedColor(Color.CYAN);
+        indicator.setSelectedColor(getResources().getColor(R.color.primary_color));
         indicator.setSelectedBold(true);
 
-        setupArduino();
     }
 
     public void setupArduino(){
-        final ArduinoConnect library = mArduinoConnectApp.getArduinoLibrary();
         mStateTV.setText("Connecting");
-        library.setArduinoConnectListener(this, new ArduinoConnectListener() {
+        mArduinoService.setArduinoConnectListener(new ArduinoConnectListener() {
+//            @Override
+//            public void onServiceStateChange(ConnectionState state) {
+//                switch(state){
+//                    case STATE_CONNECTED:
+//                        mStateTV.setText("Service Connected");
+////                        if(library.bluetoothEnabled()){
+////                            connectToDevice();
+////                        } else {
+////                            mStateTV.setText("You must enable Bluetooth");
+////                        }
+//                        break;
+//                    case STATE_DISCONNECTED:
+//                        mStateTV.setText("Service Disconnected");
+//                        break;
+//                }
+//            }
+
             @Override
             public void onConnectionStateChanged(ConnectionState state, BluetoothDevice device) {
                 switch(state){
@@ -128,8 +172,8 @@ public class MainActivity extends SlidingMenuActivity {
             }
 
             @Override
-            public void onLightsStateChanged(LightColor color, LightType type) {
-
+            public void onLightsStateChanged(LightType type, LightColor color) {
+                mLightsView.setLightsState(type, color);
             }
 
             @Override
@@ -139,12 +183,18 @@ public class MainActivity extends SlidingMenuActivity {
             }
 
             @Override
+            public void onBluetoothError(String error) {
+                MyDialog.notifyUserDialog(MainActivity.this, error, false);
+            }
+
+            @Override
             public void onDeviceChanged(BluetoothDevice device) {
                 connectToDevice();
             }
         });
 
-        if(library.bluetoothEnabled()){
+//        library.startService(this);
+        if(mArduinoService.bluetoothEnabled()){
             connectToDevice();
         } else {
             mStateTV.setText("You must enable Bluetooth");
@@ -153,7 +203,7 @@ public class MainActivity extends SlidingMenuActivity {
 
     private void connectToDevice(){
         try {
-            mArduinoConnectApp.getArduinoLibrary().startArduinoConnection(this);
+            mArduinoService.startArduinoConnection();
         } catch (BluetoothDeviceException e) {
             switch(e.getCausedBy()){
                 case BLUETOOTH_NOT_ENABLED:
@@ -179,14 +229,14 @@ public class MainActivity extends SlidingMenuActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.action_voice_command){
             mLightsView.setHeadHaloColor(HaloWidget.HALO_RED);
-            mLightsView.setFogHealoColor(HaloWidget.HALO_RED);
+            mLightsView.setFogHaloColor(HaloWidget.HALO_RED);
             Toast.makeText(this, "Voice Command", Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private static class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+    private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
         String titles[] = {"Paired Devices", "Controls", "Log"};
 
@@ -200,7 +250,7 @@ public class MainActivity extends SlidingMenuActivity {
                 case 0:
                     return PairedDevicesFragment.getInstance();
                 case 1:
-                    return ControlFragment.getInstance();
+                    return ControlFragment.getInstance(mControlFragmentListener);
                 case 2:
                     return LogFragment.getInstance();
             }
@@ -215,10 +265,31 @@ public class MainActivity extends SlidingMenuActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return titles.length;
         }
     }
 
 
+    private ControlFragmentListener mControlFragmentListener = new ControlFragmentListener() {
+        @Override
+        public void onLightSwitchChanged(LightType type, LightColor color) {
+            if(mArduinoService != null){
+                mArduinoService.setLightState(type, color);
+            }
+        }
+    };
 
+
+
+    private ServiceConnection mServiceConn = new ServiceConnection(){
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mArduinoService = ((ArduinoConnectService.LocalBinder)service).getService();
+            if(mArduinoService != null)
+                setupArduino();
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+            mArduinoService = null;
+        }
+    };
 }
