@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.av1rus.arduinoconnect.application.R;
 import com.av1rus.arduinoconnect.application.app.ArduinoConnectApp;
 import com.av1rus.arduinoconnect.application.app.adapters.PairedDevicesAdapter;
-import com.av1rus.arduinoconnect.arduinolib.service.ArduinoConnectService;
-import com.av1rus.arduinoconnect.arduinolib.service.BluetoothService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +61,7 @@ public class PairedDevicesFragment extends Fragment {
         super.onStart();
 
         devices = new ArrayList<BluetoothDevice>();
-        devices.addAll(ArduinoConnectService.getPairedDevices());
+        devices.addAll(ArduinoConnectApp.getApp().getArduinoLibrary().getPairedDevices());
         final PairedDevicesAdapter adapter = new PairedDevicesAdapter(mActivity, devices);
 
         textView.setText("Set a new device:");
@@ -72,7 +70,7 @@ public class PairedDevicesFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ArduinoConnectService.setBluetoothDevice(mActivity, devices.get(position));
+                ArduinoConnectApp.getApp().getArduinoLibrary().setBluetoothDevice(mActivity, devices.get(position));
                 adapter.notifyDataSetChanged();
             }
         });

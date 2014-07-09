@@ -1,7 +1,5 @@
 package com.av1rus.arduinoconnect.arduinolib;
 
-import android.app.Activity;
-import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;

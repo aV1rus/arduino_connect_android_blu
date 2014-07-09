@@ -80,6 +80,7 @@ public class MonitorService extends Service {
             return;
         }
 
+
         // Fall back on the old API.
         mSetForegroundArgs[0] = Boolean.TRUE;
         invokeMethod(mSetForeground, mSetForegroundArgs);

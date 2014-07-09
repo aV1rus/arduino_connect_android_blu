@@ -1,10 +1,7 @@
 package com.av1rus.arduinoconnect.application.app;
 
 import android.app.Application;
-import android.content.Intent;
-
 import com.av1rus.arduinoconnect.arduinolib.ArduinoConnect;
-import com.av1rus.arduinoconnect.arduinolib.service.ArduinoConnectService;
 
 /**
  * Created by aV1rus on 4/1/14.
@@ -21,7 +18,7 @@ public class ArduinoConnectApp extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        setupService();
+//        setupService();
     }
 
     public static ArduinoConnectApp getApp(){
@@ -36,15 +33,15 @@ public class ArduinoConnectApp extends Application {
         mArduinoConnectLibrary = lib;
     }
 
-//    public ArduinoConnect getArduinoLibrary(){
-//        if(mArduinoConnectLibrary == null){
-//            setArduinoLibrary(new ArduinoConnect());
-//        }
-//
-//        return mArduinoConnectLibrary;
-//    }
+    public ArduinoConnect getArduinoLibrary(){
+        if(mArduinoConnectLibrary == null){
+            setArduinoLibrary(new ArduinoConnect());
+        }
 
-    private void setupService(){
-        Intent intent = new Intent(this, ArduinoConnectService.class);
+        return mArduinoConnectLibrary;
     }
+
+//    private void setupService(){
+//        Intent intent = new Intent(this, ArduinoConnectService.class);
+//    }
 }

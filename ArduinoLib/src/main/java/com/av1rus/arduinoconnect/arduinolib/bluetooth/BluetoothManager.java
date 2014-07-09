@@ -13,6 +13,7 @@ import android.os.Handler;
 import com.av1rus.arduinoconnect.arduinolib.exceptions.ArduinoLibraryException;
 import com.av1rus.arduinoconnect.arduinolib.exceptions.BluetoothDeviceException;
 import com.av1rus.arduinoconnect.arduinolib.listener.BluetoothListener;
+import com.av1rus.arduinoconnect.arduinolib.listener.ConnectedThreadListener;
 import com.av1rus.arduinoconnect.arduinolib.model.ConnectionState;
 import com.av1rus.arduinoconnect.arduinolib.utils.ByteUtils;
 
@@ -35,10 +36,11 @@ public class BluetoothManager implements IBluetoothManager{
     OutputStream mOutputStream;
     Scanner mScanner;
     BluetoothListener mListener;
-
     Handler mHandler;
-
     Pattern mEndLinePattern = Pattern.compile("[\\r\\n]+]");
+
+    private ConnectedThread mConnectedThread;
+
 
     boolean mIsScanning;
 
@@ -80,13 +82,14 @@ public class BluetoothManager implements IBluetoothManager{
 
     @Override
     public void sendStringToDevice(String message){
-        try {
-            if (mOutputStream != null) {
-                mOutputStream.write(message.getBytes());
-            }
-        } catch (IOException e) {
-//            Log.e(TAG, "");
-        }
+        mConnectedThread.write(message.getBytes());
+//        try {
+//            if (mOutputStream != null) {
+//                mOutputStream.write(message.getBytes());
+//            }
+//        } catch (IOException e) {
+////            Log.e(TAG, "");
+//        }
     }
 
     @Override
@@ -115,9 +118,6 @@ public class BluetoothManager implements IBluetoothManager{
                         Method m = device.getClass().getMethod("createRfcommSocket", new Class[]{int.class});
                         mBluetoothSocket = (BluetoothSocket) m.invoke(device, 1);
                         mBluetoothSocket.connect();
-
-                        mInputStream = mBluetoothSocket.getInputStream();
-                        mOutputStream = mBluetoothSocket.getOutputStream();
 
                         mListener.onConnectionStateChanged(ConnectionState.STATE_CONNECTED, device);
                         //device.getName() + "\nConnected"
@@ -167,11 +167,30 @@ public class BluetoothManager implements IBluetoothManager{
 //            mIsScanning = false;
 //        }
 
-        if(mBluetoothSocket.isConnected() && !mIsScanning){
-            mHandler.postDelayed(mBluetoothScan, 1000);
-        } else {
-            mIsScanning = false;
-        }
+
+//        try {
+//            mInputStream = mBluetoothSocket.getInputStream();
+//            mOutputStream = mBluetoothSocket.getOutputStream();
+//
+//
+//            if(mBluetoothSocket.isConnected() && !mIsScanning){
+//                mHandler.postDelayed(mBluetoothScan, 1000);
+//            } else {
+//                mIsScanning = false;
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        mConnectedThread = new ConnectedThread(mBluetoothSocket, new ConnectedThreadListener() {
+            @Override
+            public void obtainMessage(int bytes, byte[] buffer) {
+
+            }
+        });
+
+
     }
 
     @Override
